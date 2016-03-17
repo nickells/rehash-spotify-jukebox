@@ -1,15 +1,20 @@
 var express       = require('express');
 var bodyParser    = require('body-parser');
 var request       = require('request');
-var dotenv        = require('dotenv');
 var SpotifyWebApi = require('spotify-web-api-node');
+var config = require('./config.js');
 
-dotenv.load();
+const SPOTIFY_KEY = process.env.SPOTIFY_KEY || config.SPOTIFY_KEY;
+const SPOTIFY_SECRET = process.env.SPOTIFY_SECRET || config.SPOTIFY_SECRET;
+const SPOTIFY_REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI || config.SPOTIFY_REDIRECT_URI;
+const SLACK_TOKEN = process.env.SLACK_TOKEN || config.SLACK_TOKEN;
+const SPOTIFY_USERNAME = process.env.SPOTIFY_USERNAME || config.SPOTIFY_USERNAME;
+const SPOTIFY_PLAYLIST_ID = process.env.SPOTIFY_PLAYLIST_ID || config.SPOTIFY_PLAYLIST_ID;
 
 var spotifyApi = new SpotifyWebApi({
-  clientId     : process.env.SPOTIFY_KEY,
-  clientSecret : process.env.SPOTIFY_SECRET,
-  redirectUri  : process.env.SPOTIFY_REDIRECT_URI
+  clientId     : SPOTIFY_KEY,
+  clientSecret : SPOTIFY_SECRET,
+  redirectUri  : SPOTIFY_REDIRECT_URI
 });
 
 var app = express();
@@ -44,7 +49,7 @@ app.get('/callback', function(req, res) {
 });
 
 app.use('/store', function(req, res, next) {
-  if (req.body.token !== process.env.SLACK_TOKEN) {
+  if (req.body.token !== SLACK_TOKEN) {
     return res.status(500).send('Cross site request forgerizzle!');
   }
   next();
@@ -70,7 +75,7 @@ app.post('/store', function(req, res) {
             return res.send('Could not find that track.');
           }
           var track = results[0];
-          spotifyApi.addTracksToPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID, ['spotify:track:' + track.id])
+          spotifyApi.addTracksToPlaylist(SPOTIFY_USERNAME, SPOTIFY_PLAYLIST_ID, ['spotify:track:' + track.id])
             .then(function(data) {
               return res.send('Track added: *' + track.name + '* by *' + track.artists[0].name + '*');
             }, function(err) {
