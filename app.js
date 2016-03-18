@@ -3,6 +3,7 @@ var bodyParser    = require('body-parser');
 var request       = require('request');
 var SpotifyWebApi = require('spotify-web-api-node');
 var config = require('./config.js');
+var chalk = require('chalk');
 
 const SPOTIFY_KEY = process.env.SPOTIFY_KEY || config.SPOTIFY_KEY;
 const SPOTIFY_SECRET = process.env.SPOTIFY_SECRET || config.SPOTIFY_SECRET;
@@ -10,6 +11,7 @@ const SPOTIFY_REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI || config.SPOTIFY_
 const SLACK_TOKEN = process.env.SLACK_TOKEN || config.SLACK_TOKEN;
 const SPOTIFY_USERNAME = process.env.SPOTIFY_USERNAME || config.SPOTIFY_USERNAME;
 const SPOTIFY_PLAYLIST_ID = process.env.SPOTIFY_PLAYLIST_ID || config.SPOTIFY_PLAYLIST_ID;
+const PORT = process.env.PORT || config.PORT;
 
 var spotifyApi = new SpotifyWebApi({
   clientId     : SPOTIFY_KEY,
@@ -95,5 +97,8 @@ app.post('/store', function(req, res) {
     });
 });
 
-app.set('port', (process.env.PORT || 5000));
-app.listen(app.get('port'));
+app.set('port', (PORT || 1337));
+app.listen(app.get('port'), function(err){
+  if(err) console.log(chalk.red(`Error setting up server on ${app.get('port')}`))
+  else console.log(chalk.green(`Listening on port ${app.get('port')}`));
+});
