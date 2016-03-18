@@ -62,6 +62,12 @@ app.post('/store', function(req, res) {
       if (data.body['refresh_token']) { 
         spotifyApi.setRefreshToken(data.body['refresh_token']);
       }
+      if(req.body.text === '!list'){
+        spotifyApi.getPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID)
+        .then(function(data){
+          return res.send(data);
+        })
+      }
       if(req.body.text.indexOf(' - ') === -1) {
         var query = 'track:' + req.body.text;
       } else { 
