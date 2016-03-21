@@ -2,7 +2,7 @@ var express       = require('express');
 var bodyParser    = require('body-parser');
 var request       = require('request');
 var SpotifyWebApi = require('spotify-web-api-node');
-var config = require(__dirname + '../rehash-spotify-keys/config.js');
+var config = require(__dirname + '/../rehash-spotify-keys/config.js');
 var chalk = require('chalk');
 
 const SPOTIFY_KEY = process.env.SPOTIFY_KEY || config.SPOTIFY_KEY;
