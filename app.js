@@ -69,7 +69,8 @@ app.post('/store', function(req, res) {
         spotifyApi.getPlaylist(SPOTIFY_USERNAME, SPOTIFY_PLAYLIST_ID)
         .then(function(data){
           let tracks = data.body.tracks.items;
-          let names = tracks.map((item)=>{return item.track.artist + ' - ' + item.track.name});
+          let names = tracks.map((item,i)=>{return i + '. ' + item.track.name});
+          names = names.join('\n');
           return res.send(names);
         })
       }
