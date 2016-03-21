@@ -67,7 +67,9 @@ app.post('/store', function(req, res) {
       if(req.body.text === '!list'){
         spotifyApi.getPlaylist(SPOTIFY_USERNAME, SPOTIFY_PLAYLIST_ID)
         .then(function(data){
-          return res.send(data);
+          let tracks = data.body.tracks.items;
+          let names = tracks.map((item)=>item.track.name);
+          return res.send(names);
         })
       }
       else {
